@@ -48,7 +48,11 @@
   7. 触发 actived 钩子函数
   8. 触发 updated 钩子函数
 3. 请简述虚拟 DOM 中 Key 的作用和好处。
-
+  - 作用: 能够跟踪每个节点的身份，在进行比较的时候，会基于 key 的变化重新排列元素顺序。从而重用和重新排序现有元素，并且会移除 key 不存在的元素。方便让 vnode 在 diff 的过程中找到对应的节点，然后成功复用。
+  - 好处：可以减少 dom 的操作，减少 diff 和渲染所需要的时间，提升了性能。
 4. 请简述 Vue 中模板编译的过程。
+- 通过入口函数 compileToFunctions 是先从缓存中加载编译好的 render 函数，如果缓存中没有的话，就去调用 compile 函数，在compile 函数中，合并选项，然后调用 baseCompile 函数编译模板。
+- 把模板合并好的选项传递给 baseCompile ，baseCompile 里面完成了模板编译核心的三件事，首先调用 parse 函数把模板转换成 AST 抽象语法树，然后调用 optimize 函数对抽象语法树进行优化，标记静态语法树中的静态根节点（只包含纯文本的静态节点不是静态根节点，因为此时的优化成本大于收益），patch 过程中会跳过静态根节点，最后调用 generate 函数，将 AST 对象转化为 js 形式的代码。
+- compile 执行完毕后，会回到编译的入口函数 compileToFunctions ，通过调用 createFunction 函数，继续把上一步中生成的字符串形式 JS 代码转化为函数形式，当 render 和 staticRenderFns 初始化完毕，挂载到 Vue 实例的 options 对应的属性上。
 
 
